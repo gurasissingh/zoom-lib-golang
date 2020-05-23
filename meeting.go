@@ -172,7 +172,7 @@ type (
 		// Use Personal Meeting ID. Only used for scheduled meetings and recurring meetings with no
 		// fixed time
 		UsePMI           bool             `json:"use_pmi,omitempty"`
-		ApprovalType     ApprovalType     `json:"approval_type,omitempty"`
+		ApprovalType     ApprovalType     `json:"approval_type"`
 		RegistrationType RegistrationType `json:"registration_type,omitempty"`
 		// Audio determines how participants can join the audio portion of the meeting
 		Audio         Audio         `json:"audio,omitempty"`
