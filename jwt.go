@@ -43,6 +43,10 @@ func (c *Client) addRequestAuth(req *http.Request, err error, opts requestV2Opts
 			}
 		} else {
 			ss = c.AccessToken
+			if Debug {
+				log.Println("Access Token: " + ss)
+			}
+
 		}
 
 		// set JWT Authorization header
