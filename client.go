@@ -13,9 +13,14 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
+type RequestType int
+
 const (
 	apiURI     = "api.zoom.us"
 	apiVersion = "/v2"
+
+	RequestTypeJWT   RequestType = 1
+	RequestTypeOAuth RequestType = 2
 )
 
 var (
@@ -34,15 +39,16 @@ var (
 
 // Client is responsible for making API requests
 type Client struct {
-	Key       string
-	Secret    string
-	Transport http.RoundTripper
-	Timeout   time.Duration // set to value > 0 to enable a request timeout
-	endpoint  string
+	Key         string
+	Secret      string
+	AccessToken string
+	Transport   http.RoundTripper
+	Timeout     time.Duration // set to value > 0 to enable a request timeout
+	endpoint    string
 }
 
 // NewClient returns a new API client
-func NewClient(apiKey string, apiSecret string) *Client {
+func NewClient(apiKey string, apiSecret string, accessToken string) *Client {
 	var uri = url.URL{
 		Scheme: "https",
 		Host:   apiURI,
@@ -65,12 +71,15 @@ type requestV2Opts struct {
 	Ret            interface{}
 	// HeadResponse represents responses that don't have a body
 	HeadResponse bool
+
+	IsAuthRequest bool
+	RequestType   RequestType
 }
 
 func initializeDefault(c *Client) *Client {
 	if c == nil {
 		if defaultClient == nil {
-			defaultClient = NewClient(APIKey, APISecret)
+			defaultClient = NewClient(APIKey, APISecret, "")
 		}
 
 		return defaultClient
@@ -81,7 +90,8 @@ func initializeDefault(c *Client) *Client {
 
 func (c *Client) executeRequest(opts requestV2Opts) (*http.Response, error) {
 	client := c.httpClient()
-	req, err := c.addRequestAuth(c.httpRequest(opts))
+	r, err := c.httpRequest(opts)
+	req, err := c.addRequestAuth(r, err, opts)
 	if err != nil {
 		return nil, err
 	}

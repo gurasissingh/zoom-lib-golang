@@ -1,6 +1,7 @@
 package zoom
 
 import (
+	"encoding/base64"
 	"log"
 	"net/http"
 	"time"
@@ -19,23 +20,33 @@ func jwtToken(key string, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-func (c *Client) addRequestAuth(req *http.Request, err error) (*http.Request, error) {
+func (c *Client) addRequestAuth(req *http.Request, err error, opts requestV2Opts) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
 
 	// establish JWT token
-	ss, err := jwtToken(c.Key, c.Secret)
-	if err != nil {
-		return nil, err
+
+	if opts.IsAuthRequest {
+		sEnc := base64.StdEncoding.EncodeToString([]byte(c.Key + ":" + c.Secret))
+		req.Header.Add("Authorization", "Basic "+sEnc)
+	} else {
+		var ss string
+		if opts.RequestType == RequestTypeJWT {
+			ss, err := jwtToken(c.Key, c.Secret)
+			if err != nil {
+				return nil, err
+			}
+
+			if Debug {
+				log.Println("JWT Token: " + ss)
+			}
+		} else {
+			ss = c.AccessToken
+		}
+
+		// set JWT Authorization header
+		req.Header.Add("Authorization", "Bearer "+ss)
 	}
-
-	if Debug {
-		log.Println("JWT Token: " + ss)
-	}
-
-	// set JWT Authorization header
-	req.Header.Add("Authorization", "Bearer "+ss)
-
 	return req, nil
 }
