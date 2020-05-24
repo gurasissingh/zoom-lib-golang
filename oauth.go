@@ -33,5 +33,6 @@ func (c *Client) GetToken(opts GetTokenOptions) (GetTokenResp, error) {
 		DataParameters: &opts,
 		URLParameters:  &opts,
 		Ret:            &ret,
+		IsAuthRequest:  true,
 	})
 }
