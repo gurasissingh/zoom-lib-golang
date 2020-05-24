@@ -33,5 +33,6 @@ func (c *Client) CreateMeeting(opts CreateMeetingOptions) (Meeting, error) {
 		Path:           fmt.Sprintf(CreateMeetingPath, opts.HostID),
 		DataParameters: &opts,
 		Ret:            &ret,
+		RequestType:    RequestTypeOAuth,
 	})
 }
