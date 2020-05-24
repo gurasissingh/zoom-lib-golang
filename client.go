@@ -17,6 +17,7 @@ type RequestType int
 
 const (
 	apiURI     = "api.zoom.us"
+	simpleRUI  = "zoom.us"
 	apiVersion = "/v2"
 
 	RequestTypeJWT   RequestType = 1
@@ -58,7 +59,7 @@ func NewClient(apiKey string, apiSecret string, accessToken string) *Client {
 
 	var authURI = url.URL{
 		Scheme: "https",
-		Host:   apiURI,
+		Host:   simpleRUI,
 	}
 
 	return &Client{
