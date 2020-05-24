@@ -66,6 +66,7 @@ func NewClient(apiKey string, apiSecret string, accessToken string) *Client {
 		Secret:       apiSecret,
 		endpoint:     uri.String(),
 		authEndpoint: authURI.String(),
+		AccessToken:  accessToken,
 	}
 }
 
