@@ -5,9 +5,10 @@ import "fmt"
 const OAuthGetToken = "/oauth/token"
 
 type GetTokenOptions struct {
-	GrantType   string `json:"grant_type" url:"grant_type"`
-	Code        string `json:"code" url:"code"`
-	RedirectUri string `json:"redirect_uri" url:"redirect_uri"`
+	GrantType    string `json:"grant_type" url:"grant_type"`
+	Code         string `json:"code" url:"code"`
+	RedirectUri  string `json:"redirect_uri" url:"redirect_uri"`
+	RefreshToken string `json:"refresh_token url:refresh_token"`
 }
 
 type GetTokenResp struct {
