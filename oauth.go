@@ -31,6 +31,7 @@ func (c *Client) GetToken(opts GetTokenOptions) (GetTokenResp, error) {
 		Method:         Post,
 		Path:           fmt.Sprintf(OAuthGetToken),
 		DataParameters: &opts,
+		URLParameters:  &opts,
 		Ret:            &ret,
 	})
 }
